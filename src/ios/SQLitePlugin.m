@@ -120,7 +120,9 @@
                 if(sqlite3_exec(db, (const char*)"SELECT count(*) FROM sqlite_master;", NULL, NULL, NULL) == SQLITE_OK) {
                     dbPointer = [NSValue valueWithPointer:db];
                     [openDBs setObject: dbPointer forKey: dbfilename];
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"a1"];
+                    NSMutableDictionary * fjinfo = [NSMutableDictionary dictionaryWithCapacity:0];
+                    [fjinfo setObject: [NSNumber numberWithInt:-1] forKey:@"dbid"];
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:fjinfo];
                 } else {
                     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Unable to open DB with key"];
                     // XXX TODO: close the db handle & [perhaps] remove from openDBs!!
@@ -224,7 +226,8 @@
 
     CDVPluginResult* pluginResult;
 
-    int ai = 0;
+    // Skip flatlist items that are used by Android-sqlite-evcore-native-driver
+    int ai = 2;
 
     @synchronized(self) {
         for (int i=0; i<sc; ++i) {
