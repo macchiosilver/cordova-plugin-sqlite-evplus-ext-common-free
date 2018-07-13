@@ -1,8 +1,8 @@
 # Changes
 
-## cordova-plugin-sqlite-evplus-ext-common-free 0.0.2-dev+1
+## cordova-plugin-sqlite-evplus-ext-common-free 0.0.2-pre01
 
-TBD
+- Include memory and performance enhancements using flat JSON interface for iOS/macOS
 
 ## cordova-plugin-sqlite-evplus-ext-common-free 0.0.1
 

@@ -1116,7 +1116,7 @@ var mytests = function() {
           });
         }, MYTIMEOUT);
 
-        it(suiteName + "INSERT inline BLOB value (X'FFD1FFD2') and check stored data [Plugin BROKEN: missing result column data; SELECT BLOB value ISSUE with Android/Windows/WP8]", function(done) {
+        it(suiteName + "INSERT inline BLOB value (X'FFD1FFD2') and check stored data [Plugin BROKEN: missing result column data; XXX POSSIBLE CRASH when SELECTing BLOB value on Android/iOS/macOS; SELECT BLOB value ISSUE on Windows/???]", function(done) {
           var db = openDatabase('INSERT-inline-BLOB-value-FFD1FFD2-and-check-stored-data.db', '1.0', 'Demo', DEFAULT_SIZE);
 
           db.transaction(function(tx) {
@@ -1137,11 +1137,15 @@ var mytests = function() {
                   expect(item).toBeDefined();
                   expect(item.hexValue).toBe('FFD1FFD2');
 
-                  // STOP here in case of Android:
+                  // XXX STOP here due to POSSIBLE CRASH on Android/iOS/macOS:
                   if (!isWindows && isAndroid) return done();
+                  if (!isWebSql && !isWindows && !isAndroid && !isMac && !isWP8) return done();
+                  if (isMac) return done();
 
                   tx.executeSql('SELECT * FROM test_table', [], function(ignored, rs3) {
-                    if (!isWebSql && isAndroid && isImpl2) expect('Behavior changed please update this test').toBe('--');
+                    // XXX PLUGIN NOT EXPECTED TO GET HERE on any platform in this plugin version
+                    // if (!isWebSql && isAndroid && isImpl2) expect('Behavior changed please update this test').toBe('--');
+                    if (!isWebSql) expect('XXX PLUGIN BEHAVIOR CHANGED - please update this test').toBe('--');
                     expect(rs3).toBeDefined();
                     expect(rs3.rows).toBeDefined();
                     expect(rs3.rows.length).toBeDefined();
@@ -1152,8 +1156,9 @@ var mytests = function() {
                     var mydata = item.data;
 
                     if (!isWebSql) {
-                      // PLUGIN (iOS/macOS):
-                      expect(mydata).not.toBeDefined();
+                      // XXX NOT EXPECTED TO GET HERE in this plugin version
+                      // expect(mydata).not.toBeDefined();
+                      expect('XXX PLUGIN BEHAVIOR CHANGED - please update this test').toBe('--');
                       return done();
                     } else {
                       expect(mydata).toBeDefined();

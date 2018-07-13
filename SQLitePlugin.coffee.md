@@ -33,6 +33,10 @@
     # NOTE: In case txLocks is renamed or replaced the selfTest has to be adapted as well.
     txLocks = {}
 
+    # XXX GONE (no longer needed):
+    # Indicate if the platform implementation (Android/iOS/macOS) requires flat JSON interface
+    # useflatjson = false
+
 ## utility functions:
 
     # Errors returned to callbacks must conform to `SqlError` with a code and message.
@@ -230,7 +234,9 @@
           # NOTE: the db state is NOT stored (in @openDBs) if the db was closed or deleted.
           console.log 'OPEN database: ' + @dbname + ' - OK'
 
+          # distinguish use of flat JSON batch sql interface
           if !!fjinfo and !!fjinfo.dbid
+            console.log 'Detected Android/iOS/macOS platform version with flat JSON interface'
             @dbidmap[@dbname] = @dbid = fjinfo.dbid
             @fjmap[@dbname] = true
 
@@ -516,7 +522,7 @@
         @run_batch batchExecutes, handlerFor
       return
 
-    # version for Android-sqlite-evcore-native-driver-free (with flat JSON interface)
+    # version for Android/iOS/macOS with flat JSON interface
     SQLitePluginTransaction::run_batch_flatjson = (batchExecutes, handlerFor) ->
       flatlist = []
       mycbmap = {}
@@ -616,6 +622,11 @@
               code: code
               message: errormessage
 
+          # XXX TBD STILL NEEDED for iOS/macOS
+          else if r == 'errormessage'
+            errormessage = result[ri++]
+            q.error { result: { message: errormessage } }
+
           ++i
 
         return
@@ -623,6 +634,10 @@
       # NOTE: flatlist.length is needed internally for the JSON decoding.
       if @db.dbid isnt -1
         cordova.exec mycb, null, "SQLitePlugin", "fj:#{flatlist.length};extra", flatlist
+
+      else
+        cordova.exec mycb, null, "SQLitePlugin", "backgroundExecuteSqlBatch",
+          [{dbargs: {dbname: @db.dbname}, flen: batchExecutes.length, flatlist: flatlist}]
 
       return
 
@@ -652,7 +667,7 @@
         for resultIndex in [0 .. result.length-1]
           r = result[resultIndex]
           type = r.type
-          # NOTE: r.qid can be ignored
+          # NOTE: r.qid ignored (if present)
           res = r.result
 
           q = mycbmap[resultIndex]
@@ -660,6 +675,8 @@
           if q
             if q[type]
               q[type] res
+
+          ++i
 
         return
 

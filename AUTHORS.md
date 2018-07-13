@@ -7,6 +7,7 @@
 - Translated to Coffee-Script using js2coffee tool by @brodybits (Chris Brody)
 - API changes by @brodybits (Chris Brody)
 - Transaction timing fixes to support PouchDB by @nolanlawson
+- _Performance and memory usage enhancements by @brodybits (Chris Brody)_
 
 ## Android version
 
@@ -15,6 +16,8 @@
 - Maintained by @brodybits (Chris Brody)
 - Fixes to support old Android versions by @nolanlawson
 - Thanks to Mark Oppenheim <mark.oppenheim@mnetics.co.uk> for fixes to open/close callbacks and repeated open/close/delete operations
+- _evcore enhancements by @brodybits (Chris Brody)_
+- _Performance and memory usage enhancements by @brodybits (Chris Brody)_
 
 ## iOS/macOS version
 
