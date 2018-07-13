@@ -561,7 +561,9 @@ Contact for commercial license: sales@litehelpers.net
         ++i;
       }
     };
-    cordova.exec(mycb, null, "SQLitePlugin", "fj:" + flatlist.length + ";extra", flatlist);
+    if (this.db.dbid !== -1) {
+      cordova.exec(mycb, null, "SQLitePlugin", "fj:" + flatlist.length + ";extra", flatlist);
+    }
   };
 
   SQLitePluginTransaction.prototype.run_batch = function(batchExecutes, handlerFor) {
