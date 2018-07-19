@@ -355,17 +355,26 @@ var mytests = function() {
             // INSERT or IGNORE with the real thing:
             tx.executeSql('INSERT or IGNORE INTO characters VALUES (?,?,?)', ['Sonic', 'Sega', 0], function (tx, res) {
               expect(res.rowsAffected).toBe(1);
+              // XXX CHECK insertId here in this plugin version branch:
+              expect(res.insertId).toBe(1);
               tx.executeSql('INSERT INTO characters VALUES (?,?,?)', ['Tails', 'Sega', 0], function (tx, res) {
                 expect(res.rowsAffected).toBe(1);
+                // XXX CHECK insertId here in this plugin version branch:
+                expect(res.insertId).toBe(2);
                 tx.executeSql('INSERT INTO companies VALUES (?,?)', ['Sega', 1], function (tx, res) {
                   // XXX still fails on Windows (8.1):
                   expect(res.rowsAffected).toBe(1);
+                  // XXX CHECK insertId here in this plugin version branch:
+                  expect(res.insertId).toBe(1);
                   // query with subquery
                   var sql = 'UPDATE characters ' +
                       ' SET fav=(SELECT fav FROM companies WHERE name=?)' +
                       ' WHERE creator=?';
                   tx.executeSql(sql, ['Sega', 'Sega'], function (tx, res) {
                     equal(res.rowsAffected, 2);
+                    // XXX CHECK insertId here on plugin only in this plugin version branch:
+                    if (!isWebSql)
+                      expect(res.insertId).toBe(1);
                     // query with 2 subqueries
                     var sql = 'UPDATE characters ' +
                         ' SET fav=(SELECT fav FROM companies WHERE name=?),' +
@@ -376,8 +385,11 @@ var mytests = function() {
                       // knockoffs shall be ignored:
                       tx.executeSql('INSERT or IGNORE INTO characters VALUES (?,?,?)', ['Sonic', 'knockoffs4you', 0], function (tx, res) {
                         equal(res.rowsAffected, 0);
-                        // XXX CHECK HERE in this plugin version branch:
-                        expect(res.insertId).toBeDefined();
+                        // XXX CHECK insertId here in this plugin version branch:
+                        if (isWebSql)
+                          expect(res.insertId).toBe(1);
+                        else
+                          expect(res.insertId).not.toBeDefined();
 
                         start();
                       }, function(tx, err) {
