@@ -376,6 +376,8 @@ var mytests = function() {
                       // knockoffs shall be ignored:
                       tx.executeSql('INSERT or IGNORE INTO characters VALUES (?,?,?)', ['Sonic', 'knockoffs4you', 0], function (tx, res) {
                         equal(res.rowsAffected, 0);
+                        // XXX CHECK HERE in this plugin version branch:
+                        expect(res.insertId).toBeDefined();
 
                         start();
                       }, function(tx, err) {
