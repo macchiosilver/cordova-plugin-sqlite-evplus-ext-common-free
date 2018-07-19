@@ -444,9 +444,13 @@
     }
 
     if (!hasRows) {
-        [results addObject:@"ch2"];
-        [results addObject:rowsAffected];
-        [results addObject:insertId];
+        if (diffRowsAffected > 0) {
+            [results addObject:@"ch2"];
+            [results addObject:rowsAffected];
+            [results addObject:insertId];
+        } else {
+            [results addObject:@"ok"];
+        }
     }
 }
 
