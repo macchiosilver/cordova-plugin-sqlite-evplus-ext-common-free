@@ -446,6 +446,11 @@
     if (error) {
         /* add error with result.message: */
 
+        NSLog(@"*** error info");
+        NSLog(@"*** error object: %@", error);
+        NSLog(@"*** error code: %@", [error objectForKey:@"code"]);
+        NSLog(@"*** error message: %@", [error objectForKey:@"message"]);
+
         // XXX FUTURE TBD: include full error object instead (??)
         [results addObject:@"errormessage"];
         //[results addObject:error];
