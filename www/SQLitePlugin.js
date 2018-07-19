@@ -558,13 +558,6 @@ Contact for commercial license: sales@litehelpers.net
             code: code,
             message: errormessage
           });
-        } else if (r === 'errormessage') {
-          errormessage = result[ri++];
-          q.error({
-            result: {
-              message: errormessage
-            }
-          });
         }
         ++i;
       }

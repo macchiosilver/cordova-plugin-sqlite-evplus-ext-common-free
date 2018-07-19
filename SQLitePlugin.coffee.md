@@ -622,11 +622,6 @@
               code: code
               message: errormessage
 
-          # XXX TBD STILL NEEDED for iOS/macOS
-          else if r == 'errormessage'
-            errormessage = result[ri++]
-            q.error { result: { message: errormessage } }
-
           ++i
 
         return
