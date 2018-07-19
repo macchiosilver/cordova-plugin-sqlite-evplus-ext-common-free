@@ -345,6 +345,11 @@
         keepGoing = NO;
     } else if (params != NULL) {
         for (int b = 0; b < params_count; b++) {
+          // XXX FIX BEFORE MERGE:
+          // XXX TODO:
+          // - check result
+          // - fix indentation
+          result =
             [self bindStatement:statement withArg:[params objectAtIndex:(first+b)] atIndex:(b+1)];
         }
     }
