@@ -512,9 +512,12 @@
             q.success { rows: rows, rowsAffected: changes, insertId: insert_id }
             ++ri
 
-          else if r == 'errormessage'
-            errormessage = result[ri++]
-            q.error { result: { message: errormessage } }
+          else if r == 'error' # updated for iOS/macOS
+            # should match evcore JSON interface:
+            c = result[ri++]
+            ri++ # ignored
+            m = result[ri++]
+            q.error { code: c, message: m }
 
           ++i
 
