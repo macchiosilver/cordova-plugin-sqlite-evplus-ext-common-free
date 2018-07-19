@@ -351,6 +351,12 @@
           // - fix indentation
           result =
             [self bindStatement:statement withArg:[params objectAtIndex:(first+b)] atIndex:(b+1)];
+            // XXX FIX MERGE:
+            if (result != SQLITE_OK) {
+                error = [SQLitePlugin captureSQLiteErrorFromDb:db];
+                keepGoing = NO;
+                break;
+            }
         }
     }
 
