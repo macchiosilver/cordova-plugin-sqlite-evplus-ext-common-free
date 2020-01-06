@@ -1,5 +1,9 @@
 # Changes
 
+## cordova-plugin-sqlite-evplus-ext-common-free 0.3.0-prewip001
+
+XXX TBD XXX
+
 ## cordova-plugin-sqlite-evplus-ext-common-free 0.2.0
 
 ### cordova-sqlite-evcore-commoncore-free 0.1.0-rc1
