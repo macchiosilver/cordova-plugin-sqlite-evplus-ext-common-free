@@ -1,5 +1,7 @@
 # Cordova/PhoneGap sqlite storage - premium enterprise version with premium performance improvements and TBD limited extra features
 
+XXX TODO XXX
+
 Native SQLite component with API based on HTML5/[Web SQL (DRAFT) API](http://www.w3.org/TR/webdatabase/) for the following platforms:
 - Android
 - iOS

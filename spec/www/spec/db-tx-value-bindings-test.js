@@ -35,7 +35,9 @@ var scenarioList = [
   'Plugin-implementation-2'
 ];
 
-var scenarioCount = (!!window.hasWebKitWebSQL) ? (isAndroid ? 3 : 2) : 1;
+// var scenarioCount = (!!window.hasWebKitWebSQL) ? (isAndroid ? 3 : 2) : 1;
+
+var scenarioCount = 1;
 
 var mytests = function() {
 
@@ -1694,6 +1696,62 @@ var mytests = function() {
         }, MYTIMEOUT);
 
       });
+
+
+        it(suiteName + 'INSERT JSON TEXT string many rows with hundred properties each & SELECT the data', function(done) {
+          var db = openDatabase('INSERT-JSON-TEXT-string-many-rows-with-hundred-properties.db')
+
+          // TEST TBD (...)
+          var test_rows = 9000
+          var test_props = 100
+
+          db.transaction(function(tx) {
+            tx.executeSql('DROP TABLE IF EXISTS test_table');
+            tx.executeSql('CREATE TABLE IF NOT EXISTS test_table (data)', [], function(ignored1, ignored2) {
+
+              for (var id=0; id<test_rows; ++id) {
+                var obj = {}
+
+                obj.id = id;
+
+                for (var i=0; i<test_props; ++i) {
+                  // [TBD] NO CRASH REPRODUCED WITH THIS CASE:
+                  // obj['prop'+i] = 'value-'+(1000+i)
+                  // XXX CRASH REPRODUCED IN THIS CASE (value with 50 chars):
+                  obj['prop'+i] = 'value-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-'+(1000+i)
+                }
+
+                var insert_data = JSON.stringify(obj)
+
+                tx.executeSql('INSERT INTO test_table VALUES (?)', [insert_data])
+              }
+
+              tx.executeSql('INSERT INTO test_table VALUES (?)', ['{extra:true}'], function(tx_ignored, rs1) {
+                expect(rs1).toBeDefined();
+                expect(rs1.rowsAffected).toBe(1);
+
+                tx.executeSql('SELECT data FROM test_table', [], function(tx_ignored, rs2) {
+                  expect(rs2).toBeDefined();
+                  expect(rs2.rows).toBeDefined();
+                  // expect(rs2.rows.length).toBe(???);
+
+                  var row = rs2.rows.item(0);
+                  expect(row.data).toBeDefined() // [TBD (...)]
+
+                  done();
+
+                });
+              });
+            });
+          }, function(error) {
+            // NOT EXPECTED:
+            expect(false).toBe(true);
+            expect(error.message).toBe('---');
+            // Close (plugin only) & finish:
+            (isWebSql) ? done() : db.close(done, done);
+          });
+        }, MYTIMEOUT * 5); // TBD TEST TBD (...)
+
 
     });
   }
